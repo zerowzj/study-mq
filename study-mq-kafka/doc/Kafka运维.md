@@ -21,61 +21,166 @@
 
 ## 1.2 配置
 
-1. server.properties
+### 1.2.1 系统
 
-   ```shell
-   ############################# Server Basics #############################
-   #broker的全局唯一编号，不能重复
-   broker.id=0
-   
-   ############################# Socket Server Settings #############################
-   #处理网络请求的线程数量，也就是接收消息的线程数。
-   #接收线程会将接收到的消息放到内存中，然后再从内存中写入磁盘。
-   num.network.threads=3
-   #消息从内存中写入磁盘是时候使用的线程数量。
-   #用来处理磁盘IO的线程数量
-   num.io.threads=8
-   #发送套接字的缓冲区大小
-   socket.send.buffer.bytes=102400
-   #接受套接字的缓冲区大小
-   socket.receive.buffer.bytes=102400
-   #请求套接字的缓冲区大小
-   socket.request.max.bytes=104857600
-   
-   ############################# Log Basics #############################
-   #（分隔的目录列表，用于存储日志文件
-   log.dirs=/tmp/kafka-logs
-   #每个主题的默认日志分区数。更多分区允许更大
-   num.partitions=1
-   #我们知道segment文件默认会被保留7天的时间，超时的话就
-   #会被清理，那么清理这件事情就需要有一些线程来做。这里就是
-   #用来设置恢复和清理data下数据的线程数量
-   #在启动时用于日志恢复和在关闭时刷新的每个数据目录的线程数。
-   #对于数据目录位于RAID阵列中的安装，建议增加此值。
-   num.recovery.threads.per.data.dir=1
-   
-   ############################# Internal Topic Settings  #############################
-   offsets.topic.replication.factor=1
-   transaction.state.log.replication.factor=1
-   transaction.state.log.min.isr=1
-   
-   ############################# Log Flush Policy #############################
-   log.flush.interval.messages=10000
-   log.flush.interval.ms=1000
-   log.retention.hours=168
-   log.segment.bytes=1073741824
-   log.retention.check.interval.ms=300000
-   
-   ############################# Log Retention Policy #############################
-   
-   ############################# Zookeeper #############################
-   zookeeper.connect=150.158.122.249:2181
-zookeeper.connection.timeout.ms=6000
-   
-   ############################# Group Coordinator Settings #############################
-   ```
-   
-   
+1. broker.id
+
+   broker的全局唯一编号，不能重复
+
+### 1.2.2 网络
+
+1. num.network.threads
+
+   处理网络请求的线程数量，也就是接收消息的线程数。接收线程会将接收到的消息放到内存中，然后再从内存中写入磁盘。
+
+2. num.io.threads
+
+   消息从内存中写入磁盘是时候使用的线程数量。用来处理磁盘IO的线程数量
+
+3. socket.send.buffer.bytes
+
+   发送套接字的缓冲区大小
+
+4. socket.receive.buffer.bytes
+
+    接受套接字的缓冲区大小
+
+5. socket.request.max.bytes
+
+   请求套接字的缓冲区大小
+
+### 1.2.2 主题
+
+1. auto.create.topics.enable
+
+   是否允许自动创建topic，若是false，就需要通过命令创建topic
+
+2. num.partitions
+
+   每个主题的默认日志分区数
+
+3. default.replication.factor
+
+   一个topic，默认分区的replication个数 ，不能大于集群中broker的个数。
+
+4. message.max.bytes
+
+   消息体的最大大小，单位是字节
+
+### 1.2.3 zookeeper
+
+1. zookeeper.connect
+
+   zookeeper quorum设置。如果有多个使用逗号分割
+
+2. zookeeper.connection.timeout.ms
+
+   连接zk的超时时间
+
+3. zookeeper.sync.time.ms
+
+   zk集群中leader和follower之间的同步时间
+
+### 1.2.4 日志
+
+- 基本配置	
+
+  1. log.dirs
+
+     日志存放目录，多个目录使用逗号分割
+
+- 日志刷新
+
+  1. log.flush.interval.messages
+
+     当达到消息数量时，会将数据flush到日志文件中。默认10000
+
+  2. log.flush.interval.ms
+
+     当达到下面的时间(ms)时，执行一次强制的flush操作。interval.ms和interval.messages无论哪个达到，都会flush。默认3000ms
+
+  3. log.flush.scheduler.interval.ms
+
+     检查是否需要将日志flush的时间间隔
+
+- 日志保留
+
+  1. log.cleanup.policy 
+
+     日志清理策略（delete|compact）
+
+  2. log.retention.hours
+
+     日志保存时间 (hours|minutes)，默认为7天（168小时）。超过这个时间会根据policy处理数据。bytes和minutes无论哪个先达到都会触发。
+
+  3. log.retention.bytes
+
+     日志数据存储的最大字节数。超过这个时间会根据policy处理数据
+
+  4. log.retention.check.interval.ms
+
+     日志片段文件的检查周期，查看它们是否达到了删除策略的设置（log.retention.hours或log.retention.bytes）
+
+- 文件段
+
+  1. log.segment.bytes
+
+     控制日志segment文件的大小，超出该大小则追加到一个新的日志segment文件中（-1表示没有限制）
+
+  2. log.roll.hours
+
+  3. log.index.size.max.bytes
+
+     对于segment日志的索引文件大小限制
+
+  4. log.index.interval.bytes
+
+  5. num.recovery.threads.per.data.dir
+
+     我们知道segment文件默认会被保留7天的时间，超时的话就会被清理，那么清理这件事情就需要有一些线程来做。这里就是用来设置恢复和清理data下数据的线程数量在启动时用于日志恢复和在关闭时刷新的每个数据目录的线程数。对于数据目录位于RAID阵列中的安装，建议增加此值。
+
+- 压缩
+
+  1. log.cleaner.enable
+
+     是否开启压缩
+
+  2. log.cleaner.delete.retention.ms
+
+     对于压缩的日志保留的最长时间
+
+
+
+
+
+```shell
+############################# 
+#kafka日志存放目录
+log.dirs=/tmp/kafka-logs
+#每个主题的默认日志分区数。更多分区允许更大
+num.partitions=1
+#我们知道segment文件默认会被保留7天的时间，超时的话就
+#会被清理，那么清理这件事情就需要有一些线程来做。这里就是
+#用来设置恢复和清理data下数据的线程数量
+#在启动时用于日志恢复和在关闭时刷新的每个数据目录的线程数。
+#对于数据目录位于RAID阵列中的安装，建议增加此值。
+num.recovery.threads.per.data.dir=1
+
+############################# Internal Topic Settings  #############################
+offsets.topic.replication.factor=1
+transaction.state.log.replication.factor=1
+transaction.state.log.min.isr=1
+
+############################# Log Flush Policy #############################
+log.flush.interval.messages=10000
+log.flush.interval.ms=1000
+log.retention.hours=168
+log.segment.bytes=1073741824
+log.retention.check.interval.ms=300000
+
+```
+
+
 
 ## 1.3 启停
 
@@ -93,29 +198,43 @@ zookeeper.connection.timeout.ms=6000
 
 ## 2.1 主题管理
 
-1. 
+1. 查询主题
+
+   ```shell
+   #查询集群描述
+   ./kafka-topics.sh --zookeeper 172.17.0.5:2181 --describe
+   
+   #查询topic列表
+   ./kafka-topics.sh --zookeeper 172.17.0.5:2181 --list 
+   ./kafka-topics.sh --bootstrap-server 172.17.0.5:9092 --list 
+   #查询topic详情
+   ./kafka-topics.sh --zookeeper 172.17.0.5:2181 --describe \
+              --topic TOPICNAME 
+   ```
+
 2. 创建主题
 
-```shell
-#查询集群描述
-./kafka-topics.sh --zookeeper 172.17.0.5:2181 --describe
+   ```shell
+   #创建topic
+   ./kafka-topics.sh --zookeeper 172.17.0.5:2181 \
+              --create \
+              --partitions NUM \
+              --replication-factor NUM \
+              --topic TOPICNAME
+   ```
 
-#查询topic列表
-./kafka-topics.sh --zookeeper 172.17.0.5:2181 --list 
-./kafka-topics.sh --bootstrap-server 172.17.0.5:9092 --list 
+3. 变更主题
 
-#查询topic详情
-./kafka-topics.sh --zookeeper 172.17.0.5:2181 --describe --topic TOPICNAME 
-
-#删除topic
-./kafka-topics.sh --zookeeper 172.17.0.5:2181 --delete --topic TOPICNAME
-
-#修改topic
-./kafka-topics.sh --zookeeper 172.17.0.5:2181 --alter --partitions NUM --topic TOPICNAME
-
-#创建topic
-./kafka-topics.sh --zookeeper 172.17.0.5:2181 --create -partitions NUM--replication-factor NUM --topic TOPICNAME
-```
+   ```shell
+   #删除topic
+   ./kafka-topics.sh --zookeeper 172.17.0.5:2181 --delete \
+             --topic TOPICNAME
+   #修改topic分区
+   ./kafka-topics.sh --zookeeper 172.17.0.5:2181 \
+             --alter \
+             --partitions NUM \
+             --topic TOPICNAME
+   ```
 
 ## 2.2 消费者组管理
 
@@ -142,7 +261,11 @@ zookeeper.connection.timeout.ms=6000
 
 ## 2.3 
 
-# 3.
+
+
+# 4. 常见问题及解决
+
+## 4.1 消息堆积
 
 
 
