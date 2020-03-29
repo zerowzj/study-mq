@@ -94,7 +94,7 @@ zookeeper.connection.timeout.ms=6000
 ## 2.1 主题管理
 
 1. 
-2. 
+2. 创建主题
 
 ```shell
 #查询集群描述
