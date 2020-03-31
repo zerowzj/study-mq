@@ -121,6 +121,16 @@
 
      日志片段文件的检查周期，查看它们是否达到了删除策略的设置（log.retention.hours或log.retention.bytes）
 
+- 日志压缩
+
+  1. log.cleaner.enable
+
+     是否开启压缩
+
+  2. log.cleaner.delete.retention.ms
+
+     对于压缩的日志保留的最长时间
+
 - 文件段
 
   1. log.segment.bytes
@@ -138,16 +148,6 @@
   5. num.recovery.threads.per.data.dir
 
      我们知道segment文件默认会被保留7天的时间，超时的话就会被清理，那么清理这件事情就需要有一些线程来做。这里就是用来设置恢复和清理data下数据的线程数量在启动时用于日志恢复和在关闭时刷新的每个数据目录的线程数。对于数据目录位于RAID阵列中的安装，建议增加此值。
-
-- 压缩
-
-  1. log.cleaner.enable
-
-     是否开启压缩
-
-  2. log.cleaner.delete.retention.ms
-
-     对于压缩的日志保留的最长时间
 
 
 
@@ -232,36 +232,62 @@ log.retention.check.interval.ms=300000
    #修改topic分区
    ./kafka-topics.sh --zookeeper 172.17.0.5:2181 \
              --alter \
-             --partitions NUM \
-             --topic TOPICNAME
+             --partitions 2 \
+             --topic topic
    ```
 
 ## 2.2 消费者组管理
 
-```shell
-#查询消费者组列表
-./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 --list
+1. 查询
 
-#查询消费者组详情
-./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 --describe --group GROUBNAME
+   ```shell
+   #查询消费者组列表
+   ./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 --list
+   
+   #查询消费者组详情
+   ./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 --describe \
+                --group GROUBNAME
+   ```
 
-#删除消费者组
-./kafka-consumer-groups.sh --zookeeper 172.17.0.5:2181 --delete --group GROUBNAM
+2. 删除
 
-#重设消费者组位移
-#最早处
-./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 --group GROUPNAME --reset-offsets --all-topics --to-earliest --execute
-#最新处
-./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 --group GROUPNAME --reset-offsets --all-topics --to-latest --execute
-#某个位置
-./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 --group GROUPNAME --reset-offsets --all-topics --to-offset 3 --execute
-#某个时间之后得最早位移
-./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 --group GROUPNAME --reset-offsets --all-topics --to-datetime 2019-09-15T00:00:00.000
-```
+   ```shell
+   #删除消费者组
+   ./kafka-consumer-groups.sh --zookeeper 172.17.0.5:2181 --delete \
+                --group GROUBNAME
+   ```
 
-## 2.3 
+3. 重设消费者组位移
 
-
+   ```shell
+   #最早处
+   ./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 \
+                --group GROUPNAME \
+                --reset-offsets \
+                --all-topics \
+                --to-earliest \
+                --execute
+   #最新处
+   ./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 \
+                --group GROUPNAME \
+                --reset-offsets \
+                --all-topics \
+                --to-latest \
+                --execute
+   #某个位置
+   ./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 \
+                --group GROUPNAME \
+                --reset-offsets \
+                --all-topics \
+                --to-offset 3 \
+                --execute
+   #某个时间之后得最早位移
+   ./kafka-consumer-groups.sh --bootstrap-server 172.17.0.5:9092 \
+                --group GROUPNAME \
+                --reset-offsets \
+                --all-topics \
+                --to-datetime 2019-09-15T00:00:00.000
+   ```
 
 # 4. 常见问题及解决
 

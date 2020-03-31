@@ -2,7 +2,7 @@
 
 ## 1.1 安装
 
-1. 配置java环境
+1. 配置JDK
 
 2. 解压apache-zookeeper-3.6.0-bin.tar.gz到/usr/server/zookeeper3.6.0
 
@@ -10,7 +10,7 @@
    tar -zxvf apache-zookeeper-3.6.0-bin.tar.gz -C /usr/server/zookeeper3.6.0
    ```
 
-3. 复制文件 zookeeper3.6.0/conf/zoo_sample.cfg
+3. 复制文件配置文件： zookeeper3.6.0/conf/zoo_sample.cfg
 
    ```shell
    cp zoo_sample.cfg zoo.cfg
@@ -23,11 +23,9 @@
    - lib
    - log
 
-## 1.2 配置
+## 1.2 启停
 
-
-
-## 1.3 启停
+### 1.2.1 脚本启动
 
 1. 进入zookeeper3.6.0/bin目录，执行以下脚本
 
@@ -39,6 +37,16 @@
    ./zkCli.sh
    ```
 
+### 1.2.2 自动启动
+
+1. 12312
+
+   ```
+   
+   ```
+
+   
 
 
-# 2. 集群
+
+# 2. 配置

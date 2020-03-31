@@ -1,0 +1,24 @@
+#!/bin/sh
+#chkconfig:2345 20 90
+#description:zookeeper
+#processname:zookeeper
+
+export JAVA_HOME=/usr/local/jdk1.8.0_162
+ZK_HOME=/usr/server/zookeeper3.6.0
+case $1 in
+start)
+  $ZK_HOME/bin/zkServer.sh start
+  ;;
+stop)
+  $ZK_HOME/bin/zkServer.sh stop
+  ;;
+status)
+  $ZK_HOME/bin/zkServer.sh status
+  ;;
+restart)
+  $ZK_HOME/bin/zkServer.sh restart
+  ;;
+*)
+  echo "Usage: nexus {start|stop|status|restart}"
+  ;;
+esac
