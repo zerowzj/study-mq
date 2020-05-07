@@ -14,16 +14,13 @@ public class Consumer {
     public static void main(String[] args) {
         //consumer 的配置属性
         Properties props = new Properties();
-
         ///brokers 地址
         props.put("bootstrap.servers", "localhost:9092");
-
         //指定该 consumer 将加入的消费组
         props.put("group.id", "test");
         //开启自动提交 offset，关于offset提交，我们后续再来详细说说
         props.put("enable.auto.commit", "true");
         props.put("auto.commit.interval.ms", "1000");
-
         //指定序列化类
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
