@@ -185,7 +185,17 @@ log.retention.check.interval.ms=300000
 
      - log.index.interval.bytes
 
-       对于segment日志的索引文件大小限制
+       对于
+
+       
+
+       
+
+       
+
+       
+
+       日志的索引文件大小限制
 
 
 
