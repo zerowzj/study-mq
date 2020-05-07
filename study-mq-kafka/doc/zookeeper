@@ -3,7 +3,8 @@
 #description:zookeeper
 #processname:zookeeper
 
-export JAVA_HOME=/usr/local/jdk1.8.0_162
+#解决 JAVA_HOME is not set and java could not be found in PATH.
+#export JAVA_HOME=/usr/local/jdk1.8.0_162
 ZK_HOME=/usr/server/zookeeper3.6.0
 case $1 in
 start)
