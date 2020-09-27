@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class MyListener {
 
     @KafkaListener(topics = "cicada-topic")
-    public void listenMsg(ConsumerRecord<String, String> record) {
+    public void listen(ConsumerRecord<String, String> record) {
         String value = record.value();
         log.info(">>>>>> {}" + value);
     }
