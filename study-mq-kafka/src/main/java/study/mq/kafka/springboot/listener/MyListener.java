@@ -12,6 +12,6 @@ public class MyListener {
     @KafkaListener(topics = "cicada-topic")
     public void listenMsg(ConsumerRecord<String, String> record) {
         String value = record.value();
-        log.info("ConsumerMsg====>>" + value);
+        log.info(">>>>>> {}" + value);
     }
 }
