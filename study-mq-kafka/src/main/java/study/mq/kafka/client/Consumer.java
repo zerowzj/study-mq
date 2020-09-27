@@ -1,4 +1,4 @@
-package study.mq.kafka;
+package study.mq.kafka.client;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;

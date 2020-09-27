@@ -1,0 +1,34 @@
+#
+logging:
+  config: classpath:logback.xml
+#
+spring:
+  application:
+    name: study-mq
+  main:
+    web-application-type: none
+    banner-mode: 'off'
+  #Kafka配置
+  kafka:
+    #逗号分隔，集群地址
+    bootstrap-servers: 1123123
+    #********************
+    #（★）生产者
+    #********************
+    producer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      client-id: CLIENT_ID
+      retries: 0
+      batch-size: 16384
+      acks: 1
+    #********************
+    #（★）消费者
+    #********************
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: GROUP_ID
+    #
+    listener:
+      concurrency: 5
